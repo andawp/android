@@ -4,11 +4,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +38,42 @@ public class FileExploreActivity extends ActionBarActivity {
             currentFiles = root.listFiles();
             inflateListView(currentFiles);
         }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if(currentFiles[position].isFile()) return;
+                File[] tmp = currentFiles[position].listFiles();
+                if(tmp  == null || tmp.length == 0)
+                {
+                    Toast.makeText(this,"当前路径下面没有文件或不可访问！",Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    currentParent = currentFiles[position];
+                    inflateListView(tmp);
+                }
+            }
+        });
+
+        Button parent = (Button)findViewById(R.id.parent);
+        parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try
+                {
+                    if(currentParent.getCanonicalPath().equals("/mnt/sdcard"))
+                    {
+                        currentParent = currentParent.getParentFile();
+                        currentFiles = currentParent.listFiles();
+                        inflateListView(currentFiles);
+                    }
+                }
+                catch (IOException ioe)
+                {
+                    ioe.printStackTrace();
+                }
+            }
+        });
     }
 
     private void  inflateListView(File[] files)

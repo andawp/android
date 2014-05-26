@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"></ListView>
 
     <Button
-        android:id="parent"
+        android:id="@+id/parent"
         android:text="Parent"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
