@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -45,7 +46,7 @@ public class FileExploreActivity extends ActionBarActivity {
                 File[] tmp = currentFiles[position].listFiles();
                 if(tmp  == null || tmp.length == 0)
                 {
-                    Toast.makeText(this,"当前路径下面没有文件或不可访问！",Toast.LENGTH_LONG).show();
+                    Toast.makeText(FileExploreActivity.this,"当前路径下面没有文件或不可访问！",Toast.LENGTH_LONG).show();
                 }
                 else
                 {
@@ -78,14 +79,12 @@ public class FileExploreActivity extends ActionBarActivity {
 
     private void  inflateListView(File[] files)
     {
-        List<Map<String,Object>> listItems = new ArrayList<Map<String, Object>>();
+        String[] fileName = new String[files.length];
         for (int i = 0; i < files.length; i++) {
-            Map<String,Object> listItem = new HashMap<String,Object>();
-            listItem.put("fileName",files[i].getName());
-            listItems.add(listItem);
+            fileName[i] = files[i].getName();
         }
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this,listItems,R.layout.abc_list_menu_item_layout,"fileName",R.id.list);
-        listView.setAdapter(simpleAdapter);
+
+        listView.setAdapter(new ArrayAdapter<String>(FileExploreActivity.this,R.layout.line,fileName));
     }
 
     @Override
